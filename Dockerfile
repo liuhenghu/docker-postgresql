@@ -1,3 +1,17 @@
+FROM 1005663978/postgresql10.7:debian10 as builder
+
+RUN apt-get update; \
+    apt-get install -y cmake g++ make 
+
+
+
+
+
+
+
+
+
+
 #
 # NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
 #
