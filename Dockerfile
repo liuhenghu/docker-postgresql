@@ -15,7 +15,7 @@ ENV LANG en_US.utf8
 
 RUN mkdir /docker-entrypoint-initdb.d
 
-RUN yum install -y postgresql10-10.7-2PGDG.rhel7  postgresql10-server-10.7-2PGDG.rhel7 postgresql10-contrib-10.7-2PGDG.rhel7
+RUN yum install -y postgresql10-10.7-2PGDG.rhel7  postgresql10-server-10.7-2PGDG.rhel7 postgresql10-contrib-10.7-2PGDG.rhel7 postgresql10-plpython-10.7-2PGDG.rhel7.x86_64
 
 ENV PATH $PATH:/usr/pgsql-10/bin
 
@@ -25,6 +25,8 @@ ENV PGDATA /var/lib/pgsql/10/data
 # this 1777 will be replaced by 0700 at runtime (allows semi-arbitrary "--user" values)
 RUN mkdir -p "$PGDATA" && chown -R postgres:postgres "$PGDATA" && chmod 1777 "$PGDATA"
 VOLUME /var/lib/pgsql/10/data
+
+RUN yum install -y postgis25_10
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
