@@ -170,7 +170,13 @@ RUN set -ex; \
 	\
 	postgres --version
 
-
+# postgis
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		postgresql-$PG_MAJOR-postgis-2.5 \
+	; \
+	rm -rf /var/lib/apt/lists/*
 
 
 # make the sample config easier to munge (and "correct by default")
