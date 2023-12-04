@@ -1,0 +1,6 @@
+[pgdg-common]
+baseurl = https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-$releasever-$basearch
+enabled = 1
+exclude = pgpool*
+gpgcheck = 0
+name = PostgreSQL common RPMs for RHEL / CentOS $releasever - $basearch

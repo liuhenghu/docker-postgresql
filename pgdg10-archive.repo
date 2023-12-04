@@ -1,0 +1,5 @@
+[pgdg10-archive]
+name=PostgreSQL 10 RPMs for RHEL/Rocky Linux/AlmaLinux 7  $releasever - $basearch
+baseurl=https://yum-archive.postgresql.org/10/redhat/rhel-$releasever-$basearch
+enabled=1
+gpgcheck=0
