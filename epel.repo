@@ -1,5 +1,0 @@
-[epel]
-baseurl = https://mirrors.ustc.edu.cn/epel/7/$basearch
-enabled = 1
-gpgcheck = 0
-name = Extra Packages for Enterprise Linux 7 - $basearch
