@@ -154,7 +154,7 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends postgresql-common; \
 	sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf; \
 	apt-get install -y --no-install-recommends \
-		"postgresql-$PG_MAJOR=$PG_VERSION" "postgresql-plpython3-$PG_MAJOR=$PG_VERSION"\
+		"postgresql-$PG_MAJOR=$PG_VERSION" "libpq5=$PG_VERSION" "postgresql-client-10=$PG_VERSION" "postgresql-plpython3-$PG_MAJOR=$PG_VERSION"\
 	; \
 	\
 	rm -rf /var/lib/apt/lists/*; \
