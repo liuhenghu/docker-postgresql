@@ -1,22 +1,18 @@
 FROM 1005663978/postgresql10.7:debian10 as builder
 
 ADD geos-3.10.3.tar.bz2 postgis-2.5.9.tar.gz /
-RUN apt-get update; \
-    apt-get install -y cmake g++ make libc6 libjson-c3 libgdal20 liblwgeom-2.5-0 libproj13 libsfcgal1 libprotobuf-c1
 
 
 RUN apt-get update; \
-    apt-get install -y cmake g++ make  libpq-dev libxml2-dev libsfcgal-dev libproj-dev libgdal-dev libprotobuf-c-dev liblwgeom-dev
-	postgresql-server-dev-10=10.7-1.pgdg100+1 --no-install-recommends
+    apt-get install -y cmake g++ make  libpq-dev libxml2-dev libsfcgal-dev libproj-dev libgdal-dev libprotobuf-c-dev liblwgeom-dev \
+	postgresql-server-dev-10=10.7-1.pgdg100+1 protobuf-c-compiler --no-install-recommends
 
 
 
 RUN mkdir /build &&  cd /build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ../geos-3.10.3   && \
-	make && make install DESTDIR=/usr/geos
+	make -j$(nproc)  && make install DESTDIR=/usr/geos   && cp -r /usr/geos/*  /
 
-RUN cd /postgis-2.5.9  && ./configure --with-sfcgal  && make  && make install DESTDIR=/usr/postgis
-
-
+RUN cd /postgis-2.5.9  && ./configure --with-sfcgal  && make -j$(nproc)  && make install DESTDIR=/usr/postgis
 
 
 #
@@ -191,14 +187,18 @@ RUN set -ex; \
 	\
 	postgres --version
 
+
+
 # postgis
 RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		libxml2 libjson-c3 libgdal20 liblwgeom-2.5-0 \
-		libproj13 libsfcgal1 libprotobuf-c1  \
+		libproj13 libsfcgal1 libprotobuf-c1 protobuf-c-compiler \
 	; \
 	rm -rf /var/lib/apt/lists/*
+COPY --from=builder /usr/geos  /
+COPY --from=builder /usr/postgis /
 
 
 # make the sample config easier to munge (and "correct by default")
