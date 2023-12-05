@@ -1,13 +1,20 @@
 FROM 1005663978/postgresql10.7:debian10 as builder
 
+ADD geos-3.10.3.tar.bz2 postgis-2.5.9.tar.gz /
 RUN apt-get update; \
-    apt-get install -y cmake g++ make 
+    apt-get install -y cmake g++ make libc6 libjson-c3 libgdal20 liblwgeom-2.5-0 libproj13 libsfcgal1 libprotobuf-c1
+
+
+RUN apt-get update; \
+    apt-get install -y cmake g++ make  libpq-dev libxml2-dev libsfcgal-dev libproj-dev libgdal-dev libprotobuf-c-dev liblwgeom-dev
+	postgresql-server-dev-10=10.7-1.pgdg100+1 --no-install-recommends
 
 
 
+RUN mkdir /build &&  cd /build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ../geos-3.10.3   && \
+	make && make install DESTDIR=/usr/geos
 
-
-
+RUN cd /postgis-2.5.9  && ./configure --with-sfcgal  && make  && make install DESTDIR=/usr/postgis
 
 
 
@@ -168,7 +175,7 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends postgresql-common; \
 	sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf; \
 	apt-get install -y --no-install-recommends \
-		"postgresql-$PG_MAJOR=$PG_VERSION" "postgresql-plpython3-$PG_MAJOR=$PG_VERSION"\
+		"postgresql-$PG_MAJOR=$PG_VERSION" "libpq5=$PG_VERSION" "postgresql-client-10=$PG_VERSION" "postgresql-plpython3-$PG_MAJOR=$PG_VERSION"\
 	; \
 	\
 	rm -rf /var/lib/apt/lists/*; \
@@ -188,7 +195,8 @@ RUN set -ex; \
 RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		postgresql-$PG_MAJOR-postgis-2.5 \
+		libxml2 libjson-c3 libgdal20 liblwgeom-2.5-0 \
+		libproj13 libsfcgal1 libprotobuf-c1  \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
